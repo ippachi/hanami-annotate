@@ -29,16 +29,16 @@ $ bundle exec hanami annotate
 and already annotations has added. Just like a below
 
 ```ruby
-#                                     Table "public.users"
-#   Column   |            Type             |                     Modifiers
-#------------+-----------------------------+----------------------------------------------------
-# id         | integer                     | not null default nextval('users_id_seq'::regclass)
-# name       | text                        | not null
-# email      | text                        | not null
-# created_at | timestamp without time zone | not null
-# updated_at | timestamp without time zone | not null
-#Indexes:
-#    "users_pkey" PRIMARY KEY, btree (id)
+#                                      Table "public.users"
+#    Column   |            Type             |                     Modifiers
+# ------------+-----------------------------+----------------------------------------------------
+#  id         | integer                     | not null default nextval('users_id_seq'::regclass)
+#  name       | text                        | not null
+#  email      | text                        | not null
+#  created_at | timestamp without time zone | not null
+#  updated_at | timestamp without time zone | not null
+# Indexes:
+#     "users_pkey" PRIMARY KEY, btree (id)
 #
 class UserRepository < Hanami::Repository
 end
