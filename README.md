@@ -1,28 +1,49 @@
 # Hanami::Annotate
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/hanami/annotate`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem can add annotation to entities and repositories of hanami.
 
-TODO: Delete this and the text above, and describe your gem
+This gem support for **postgres only now**.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'hanami-annotate'
+group :plugins do
+  gem 'hanami-annotate'
+end
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install hanami-annotate
-
 ## Usage
 
-TODO: Write usage instructions here
+After the `bundle exec hanami db prepare`
+
+```
+$ bundle exec hanami annotate
+```
+
+and already annotations has added. Just like a below
+
+```ruby
+#                                     Table "public.users"
+#   Column   |            Type             |                     Modifiers
+#------------+-----------------------------+----------------------------------------------------
+# id         | integer                     | not null default nextval('users_id_seq'::regclass)
+# name       | text                        | not null
+# email      | text                        | not null
+# created_at | timestamp without time zone | not null
+# updated_at | timestamp without time zone | not null
+#Indexes:
+#    "users_pkey" PRIMARY KEY, btree (id)
+#
+class UserRepository < Hanami::Repository
+end
+
+```
 
 ## Development
 
