@@ -41,7 +41,7 @@ module Hanami
 
         def commentize(str)
           str.each_line.map do |line|
-            line.insert(0, '#')
+            line.insert(0, '# ')
           end.join
         end
 
