@@ -3,6 +3,13 @@ require 'dry/inflector'
 module Hanami
   module Annotate
     module CLI
+      # Generate annotation for Hanami entities and repositories
+      #
+      # usage:
+      #   $ bundle exec hanami annotate
+      #
+      # @todo add support for mysql and sqlite3 etc..
+      #
       class Generate < Hanami::CLI::Command
         def call(*)
           postgres
@@ -12,10 +19,7 @@ module Hanami
 
             comment = commentize(table_info)
 
-            files = \
-              Dir[Hanami.root.join('lib', '*', '{entities,repositories}', '*')]
-              .grep(Regexp.new(Dry::Inflector.new.singularize(table)))
-
+            remove_head_comments(entity_and_repository_path(table))
             adds_comments(files, comment)
           end
         end
@@ -30,8 +34,12 @@ module Hanami
           end
         end
 
+        def entity_and_repository_path(table)
+          Dir[Hanami.root.join('lib', '*', '{entities,repositories}', '*')]
+            .grep(Regexp.new(Dry::Inflector.new.singularize(table)))
+        end
+
         def adds_comments(files, comment)
-          remove_head_comment(files)
           files.each do |file|
             content = ''
             File.open(file) { |f| content += f.read }
@@ -45,22 +53,24 @@ module Hanami
           end.join
         end
 
-        def remove_head_comment(files)
+        def remove_head_comments(files)
           files.each do |file|
-            index = 0
             comment_removed_content = ''
             File.open(file) do |f|
               raw_content = f.read
 
               lines = raw_content.each_line.to_a
-              index = lines.index do |line|
-                line.strip[0] != '#'
-              end
-
+              index = non_comment_line_number(lines)
               comment_removed_content = lines[index..-1].join
             end
 
             File.open(file, 'w') { |f| f.puts(comment_removed_content) }
+          end
+        end
+
+        def non_comment_line_number(lines)
+          lines.index do |line|
+            line.strip[0] != '#'
           end
         end
       end
