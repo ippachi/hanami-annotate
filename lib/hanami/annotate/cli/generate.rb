@@ -19,7 +19,8 @@ module Hanami
 
             comment = commentize(table_info)
 
-            remove_head_comments(entity_and_repository_path(table))
+            files = entity_and_repository_path(table)
+            remove_head_comments(files)
             adds_comments(files, comment)
           end
         end
