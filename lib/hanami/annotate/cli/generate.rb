@@ -13,13 +13,13 @@ module Hanami
       class Generate < Hanami::CLI::Command
         def call(*)
           postgres
-          @tables.each do |table|
+          @table_names.each do |table_name|
             table_info = \
               `ruby -e "print %q{\\d #{table}}" | bundle exec hanami db console`
 
             comment = commentize(table_info)
 
-            files = entity_and_repository_path(table)
+            files = entity_and_repository_paths(table_name)
             remove_head_comments(files)
             adds_comments(files, comment)
           end
@@ -30,14 +30,16 @@ module Hanami
         def postgres
           output = `ruby -e "print '\\dt'" | bundle exec hanami db console`
           lines = output.each_line.grep(/\A.*public(?!.*schema_migrations)/)
-          @tables = lines.map do |line|
+
+          # tables is users, admins, books, etc
+          @table_names = lines.map do |line|
             line.split('|')[1].strip
           end
         end
 
-        def entity_and_repository_path(table)
+        def entity_and_repository_paths(table_name)
           Dir[Hanami.root.join('lib', '*', '{entities,repositories}', '*')]
-            .grep(Regexp.new(Dry::Inflector.new.singularize(table)))
+            .grep(Regexp.new(Dry::Inflector.new.singularize(table_name)))
         end
 
         def adds_comments(files, comment)
