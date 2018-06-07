@@ -16,7 +16,7 @@ end
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
 ## Usage
 
